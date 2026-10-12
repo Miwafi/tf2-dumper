@@ -1,0 +1,223 @@
+{
+  "GameUI.dll": {
+    "GameConsole004": 1905104,
+    "GameUI011": 1905648,
+    "RunGameEngine005": 1906088,
+    "VGuiModuleLoader003": 1906384
+  },
+  "ServerBrowser.dll": {
+    "ServerBrowser005": 1188408,
+    "VGuiModuleServerBrowser001": 1188416
+  },
+  "client.dll": {
+    "Alpha_IMaterialProxy003": 2794991,
+    "BreakableSurface_IMaterialProxy003": 3210351,
+    "Camo_IMaterialProxy003": 60013231,
+    "ClientLeafSystem002": 17703712,
+    "ClientRenderTargets001": 16736880,
+    "ClientReplay001": 16564472,
+    "ClientVirtualReality001": 16613648,
+    "ConveyorScroll_IMaterialProxy003": 3211199,
+    "CustomSteamImageOnModel_IMaterialProxy003": 5946175,
+    "Empty_IMaterialProxy003": 3484815,
+    "EntityOriginAlyx_IMaterialProxy003": 4140511,
+    "EntityOrigin_IMaterialProxy003": 4140575,
+    "Ep1IntroVortRefract_IMaterialProxy003": 4140639,
+    "GameClientExports001": 16613328,
+    "GameMovement001": 18057744,
+    "IEffects001": 16636040,
+    "IReplayFactory001": 16699856,
+    "MotionBlur_IMaterialProxy003": 4502015,
+    "ParticleSphereProxy_IMaterialProxy003": 4582367,
+    "PlayerLogo_IMaterialProxy003": 7368095,
+    "Pupil_IMaterialProxy003": 8417903,
+    "ShadowModel_IMaterialProxy003": 6668847,
+    "Shadow_IMaterialProxy003": 3523199,
+    "TeamTexture_IMaterialProxy003": 6295263,
+    "TextureScroll_IMaterialProxy003": 9076175,
+    "ToggleTexture_IMaterialProxy003": 5407455,
+    "VCENTERPRINT002": 16669744,
+    "VCLIENTTOOLS001": 16780032,
+    "VClient017": 16613384,
+    "VClientDllSharedAppSystems001": 17302568,
+    "VClientEntityList003": 17571800,
+    "VClientPrediction001": 18138256,
+    "VParticleSystemQuery001": 16640800,
+    "WaterLOD_IMaterialProxy003": 5095135,
+    "WeaponSkin_IMaterialProxy003": 7784159,
+    "WorldDims_IMaterialProxy003": 5106527,
+    "accumbuff4sample_IMaterialProxy003": 3619711,
+    "engine_post_IMaterialProxy003": 8171951,
+    "lampbeam_IMaterialProxy003": 4000223,
+    "lamphalo_IMaterialProxy003": 4000511
+  },
+  "datacache.dll": {
+    "MDLCache004": 299264,
+    "VDataCache003": 299008,
+    "VStudioDataCache005": 299280
+  },
+  "engine.dll": {
+    "DownloadSystem001": 4703088,
+    "EngineClientReplay001": 4703936,
+    "EngineReplay001": 4703928,
+    "EngineTraceClient003": 4703992,
+    "EngineTraceServer003": 4703968,
+    "GAMEEVENTSMANAGER001": 4704592,
+    "GAMEEVENTSMANAGER002": 4704320,
+    "GameServerData001": 4695824,
+    "IEngineSoundClient003": 4595712,
+    "IEngineSoundServer003": 4595720,
+    "ISERVERPLUGINHELPERS001": 4695640,
+    "ReplayDemoPlayer001": 7855552,
+    "ServerUploadGameStats001": 4696144,
+    "SpatialPartition001": 4711056,
+    "StaticPropMgrClient004": 4711640,
+    "StaticPropMgrServer002": 4711648,
+    "VCLIENTENGINETOOLS001": 4713328,
+    "VCvarQuery001": 4701280,
+    "VDebugOverlay003": 4665024,
+    "VENGINETOOL003": 4712624,
+    "VENGINETOOLFRAMEWORK003": 4712624,
+    "VENGINE_GAMEUIFUNCS_VERSION005": 4711880,
+    "VENGINE_HLDS_API_VERSION002": 4712008,
+    "VENGINE_LAUNCHER_API_VERSION004": 4711920,
+    "VENGINE_MATCHMAKING_VERSION001": 7830992,
+    "VEngineClient013": 4601248,
+    "VEngineClient014": 4601248,
+    "VEngineClientStringTable001": 7851488,
+    "VEngineEffects001": 4669792,
+    "VEngineModel016": 4666848,
+    "VEngineRandom001": 4710872,
+    "VEngineRenderView014": 4670424,
+    "VEngineServer021": 4696176,
+    "VEngineServer022": 4696176,
+    "VEngineServer023": 4696168,
+    "VEngineServerStringTable001": 7851592,
+    "VEngineShadowMgr002": 7101952,
+    "VEngineVGui001": 4714320,
+    "VEngineVGui002": 4714320,
+    "VModelInfoClient006": 4710192,
+    "VModelInfoServer003": 4710080,
+    "VModelInfoServer004": 4710080,
+    "VPhysicsDebugOverlay001": 4665032,
+    "VProfExport001": 4712488,
+    "VSERVERENGINETOOLS001": 4713336,
+    "VTOOLFRAMEWORKVERSION002": 4713216,
+    "VoiceServer002": 4712472,
+    "XboxSystemInterface001": 4712552
+  },
+  "filesystem_stdio.dll": {
+    "QueuedLoaderVersion004": 835072,
+    "VBaseFileSystem011": 832376,
+    "VFileSystem022": 832368
+  },
+  "inputsystem.dll": {
+    "InputSystemVersion001": 234272
+  },
+  "materialsystem.dll": {
+    "COLORCORRECTION_VERSION_1": 946192,
+    "MaterialSystemHardwareConfig012": 1013752,
+    "ShaderDLL004": 93482495,
+    "ShaderSystem002": 947864,
+    "VEngineCvar004": 1122376,
+    "VMaterialSystem080": 993616,
+    "VMaterialSystem082": 993616,
+    "VMaterialSystemConfig002": 946304,
+    "VMaterialSystemStub001": 947640,
+    "replace_proxy_IMaterialProxy003": 1225567
+  },
+  "replay.dll": {
+    "ReplaySystem001": 569392
+  },
+  "scenefilecache.dll": {
+    "SceneFileCache002": 188432
+  },
+  "server.dll": {
+    "BotManager001": 13563448,
+    "GameMovement001": 15966272,
+    "HLTVDirector001": 16222328,
+    "IEffects001": 13373944,
+    "PlayerInfoManager001": 13563456,
+    "PlayerInfoManager002": 13563440,
+    "PluginHelpersCheck001": 13569344,
+    "ServerGameClients003": 13450848,
+    "ServerGameClients004": 13450848,
+    "ServerGameClients005": 13450848,
+    "ServerGameDLL012": 13451616,
+    "ServerGameEnts001": 13451640,
+    "ServerGameTags001": 13261240,
+    "ServerReplay001": 13193464,
+    "VSERVERCHOREOTOOLS001": 13896352,
+    "VSERVERTOOLS001": 13896344,
+    "VSERVERTOOLS002": 13896344,
+    "VSERVERTOOLS003": 13896344,
+    "VServerDllSharedAppSystems001": 14508640
+  },
+  "shaderapidx9.dll": {
+    "DebugTextureInfo001": 665440,
+    "MaterialSystemHardwareConfig012": 634896,
+    "ShaderApi030": 665432,
+    "ShaderDevice001": 664528,
+    "ShaderDeviceMgr001": 682416,
+    "ShaderShadow010": 637536,
+    "VBAllocTracker001": 634880
+  },
+  "soundemittersystem.dll": {
+    "VSoundEmitter002": 241696
+  },
+  "stdshader_dbg.dll": {
+    "ShaderDLL004": 93035935
+  },
+  "stdshader_dx6.dll": {
+    "ShaderDLL004": 93112111
+  },
+  "stdshader_dx7.dll": {
+    "ShaderDLL004": 93050655
+  },
+  "stdshader_dx8.dll": {
+    "ShaderDLL004": 93208591
+  },
+  "stdshader_dx9.dll": {
+    "ShaderDLL004": 93421311
+  },
+  "studiorender.dll": {
+    "VStudioRender025": 615440
+  },
+  "unicode.dll": {
+    "VENGINEUNICODE001": 126984
+  },
+  "vaudio_minimp3.dll": {
+    "VAudio002": 369480815
+  },
+  "vgui2.dll": {
+    "VGUI_Input005": 535568,
+    "VGUI_InputInternal001": 535568,
+    "VGUI_Localize005": 505408,
+    "VGUI_Panel009": 509296,
+    "VGUI_Scheme010": 508512,
+    "VGUI_Surface030": 543808,
+    "VGUI_System010": 508640,
+    "VGUI_ivgui008": 544752
+  },
+  "vguimatsurface.dll": {
+    "VGUI_Surface030": 1132272
+  },
+  "video_services.dll": {
+    "IVideoServices002": 192656
+  },
+  "video_source2wrapper.dll": {
+    "IVideoSubSystem002": 213024
+  },
+  "vphysics.dll": {
+    "VPhysics031": 1175584,
+    "VPhysicsCollision007": 1175768,
+    "VPhysicsSurfaceProps001": 1182520
+  },
+  "vscript.dll": {
+    "VScriptManager010": 551552
+  },
+  "vstdlib.dll": {
+    "VEngineCvar004": 286752,
+    "VProcessUtils001": 287072
+  }
+}
