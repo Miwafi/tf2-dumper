@@ -1,7 +1,7 @@
 [package]
 name = "tf2-dumper"
 version = "0.1.0"
-authors = ["a2x"]
+authors = ["Miwafi"]
 edition = "2024"
 readme = "README.md"
 license = "MIT"

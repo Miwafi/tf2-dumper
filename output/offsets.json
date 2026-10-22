@@ -1,9 +1,0 @@
-{
-  "client.dll": {
-    "dwEntityList": 17571800,
-    "dwGetAllClasses": 17304552
-  },
-  "engine.dll": {
-    "dwGlobalVars": 4663888
-  }
-}
