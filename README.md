@@ -43,6 +43,14 @@ was therefore rewritten for Source 1:
     located by its runtime invariant
     `curtime == tickcount * interval_per_tick` (TF2's fixed 0.015 tick
     interval).
+- **Virtual function resolution.**
+  - `dwCreateMove` — `CInput::CreateMove` in `client.dll`. `CInput` is not
+    exported through the interface registry, so its vtable is located through
+    the module's MSVC RTTI metadata (`.?AVCInput@@` type descriptor ->
+    complete object locator -> vtable); the function is then taken from the
+    SDK-defined vtable slot.
+  - `dwSetViewAngles` — `IVEngineClient::SetViewAngles` in `engine.dll`,
+    taken from the vtable of the `VEngineClient014` interface instance.
 - **Multi-language output.** Generates C# (`.cs`), C++ (`.hpp`), JSON,
   Rust (`.rs`) and Zig files, with netvars written per module
   (e.g. `client_dll.cs`).

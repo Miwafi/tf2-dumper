@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use anyhow::Result;
+use anyhow::{bail, Context, Result};
 
 use log::{debug, warn};
 
@@ -17,6 +17,17 @@ pub type OffsetMap = BTreeMap<String, BTreeMap<String, u32>>;
 const TICK_INTERVAL: u32 = 0x3C75_C28F; // 0.015f32
 
 const ENTITY_LIST_INTERFACE: &str = "VClientEntityList003";
+
+const ENGINE_CLIENT_INTERFACE: &str = "VEngineClient014";
+
+/// `IVEngineClient::SetViewAngles` vtable slot (Valve SDK, `public/cdll_int.h`).
+const ENGINE_SETVIEWANGLES_VTABLE_INDEX: usize = 20;
+
+/// MSVC decorated type_info name of `class CInput` in `client.dll`.
+const CLIENT_INPUT_RTTI_NAME: &[u8] = b".?AVCInput@@";
+
+/// `IInput::CreateMove` vtable slot (Valve SDK, `game/client/iinput.h`).
+const CLIENT_CREATEMOVE_VTABLE_INDEX: usize = 3;
 
 pub fn offsets<P: Process + MemoryView>(
     process: &mut P,
@@ -56,6 +67,22 @@ pub fn offsets<P: Process + MemoryView>(
         Err(err) => warn!("dwGlobalVars unavailable: {}", err),
     }
 
+    // dwCreateMove: CInput::CreateMove, resolved through the CInput RTTI
+    // type descriptor -> complete object locator -> vtable.
+    match find_create_move(process) {
+        Ok(Some(rva)) => insert(&mut result, "client.dll", "dwCreateMove", rva),
+        Ok(None) => warn!("dwCreateMove unavailable (CInput vtable not found)"),
+        Err(err) => warn!("dwCreateMove unavailable: {}", err),
+    }
+
+    // dwSetViewAngles: IVEngineClient::SetViewAngles, taken from the
+    // VEngineClient014 interface instance's vtable.
+    match find_set_view_angles(process, interfaces) {
+        Ok(Some(rva)) => insert(&mut result, "engine.dll", "dwSetViewAngles", rva),
+        Ok(None) => warn!("dwSetViewAngles unavailable ({} not found)", ENGINE_CLIENT_INTERFACE),
+        Err(err) => warn!("dwSetViewAngles unavailable: {}", err),
+    }
+
     Ok(result)
 }
 
@@ -65,6 +92,140 @@ fn insert(map: &mut OffsetMap, module_name: &str, name: &str, value: u32) {
     map.entry(module_name.to_string())
         .or_default()
         .insert(name.to_string(), value);
+}
+
+/// Resolves `CInput::CreateMove` inside `client.dll`.
+///
+/// `CInput` is not exported through the interface registry, so its vtable is
+/// located through the module's MSVC RTTI metadata instead: the type
+/// descriptor named `.?AVCInput@@`, the complete object locator referencing
+/// it, and finally the vtable whose `[-1]` slot points back at that locator.
+fn find_create_move<P: Process + MemoryView>(process: &mut P) -> Result<Option<u32>> {
+    let module = process.module_by_name("client.dll")?;
+
+    let buf = process
+        .read_raw(module.base, module.size as _)
+        .data_part()?;
+
+    let base = module.base.to_umem();
+
+    // Type descriptor: {vfptr, spare, name[]}, so the name sits 0x10 bytes in.
+    let name_pos = find_bytes(&buf, CLIENT_INPUT_RTTI_NAME)
+        .context("CInput type descriptor not found")?;
+    let type_descriptor_rva = name_pos as u64 - 0x10;
+
+    // The x64 complete object locator references the type descriptor by its
+    // image-relative offset and starts with a signature of 1 and a zero
+    // member offset (CInput uses single, full-object inheritance).
+    let mut col_rva = None;
+    let mut pos = 0;
+
+    while let Some(found) = find_dword(&buf, type_descriptor_rva as u32, pos) {
+        pos = found + 1;
+
+        let Some(candidate) = found.checked_sub(12) else {
+            continue;
+        };
+
+        if read_u32(&buf, candidate) == Some(1) && read_u32(&buf, candidate + 4) == Some(0) {
+            col_rva = Some(candidate as u64);
+
+            break;
+        }
+    }
+
+    let Some(col_rva) = col_rva else {
+        return Ok(None);
+    };
+
+    // The vtable's [-1] slot holds the locator's absolute runtime address.
+    let locator_va = (base + col_rva).to_le_bytes();
+    let Some(vtable_pos) = find_bytes(&buf, &locator_va) else {
+        return Ok(None);
+    };
+
+    read_vtable_function(
+        &buf,
+        base,
+        module.size as u64,
+        vtable_pos + size_of::<u64>(),
+        CLIENT_CREATEMOVE_VTABLE_INDEX,
+    )
+}
+
+/// Resolves `IVEngineClient::SetViewAngles` inside `engine.dll` by taking the
+/// vtable of the `VEngineClient014` interface instance.
+fn find_set_view_angles<P: Process + MemoryView>(
+    process: &mut P,
+    interfaces: &InterfaceMap,
+) -> Result<Option<u32>> {
+    let Some(&instance_rva) = interfaces
+        .get("engine.dll")
+        .and_then(|ifaces| ifaces.get(ENGINE_CLIENT_INTERFACE))
+    else {
+        return Ok(None);
+    };
+
+    let module = process.module_by_name("engine.dll")?;
+
+    let buf = process
+        .read_raw(module.base, module.size as _)
+        .data_part()?;
+
+    let base = module.base.to_umem();
+
+    // The interface instance's first member is its vtable pointer.
+    let vtable_rva = read_u64(&buf, instance_rva as usize)
+        .context("failed to read VEngineClient014 vtable pointer")?
+        - base;
+
+    read_vtable_function(
+        &buf,
+        base,
+        module.size as u64,
+        vtable_rva as usize,
+        ENGINE_SETVIEWANGLES_VTABLE_INDEX,
+    )
+}
+
+/// Reads a virtual function address from a vtable and converts it to a
+/// module-relative offset.
+fn read_vtable_function(
+    buf: &[u8],
+    base: u64,
+    size: u64,
+    vtable_rva: usize,
+    index: usize,
+) -> Result<Option<u32>> {
+    let function = read_u64(buf, vtable_rva + index * size_of::<u64>())
+        .context("vtable entry out of bounds")?;
+    let rva = function.checked_sub(base).context("vtable entry outside module")?;
+
+    if rva >= size {
+        bail!("vtable entry outside module");
+    }
+
+    Ok(Some(rva as u32))
+}
+
+fn find_bytes(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+    haystack
+        .windows(needle.len())
+        .position(|window| window == needle)
+}
+
+fn find_dword(buf: &[u8], value: u32, start: usize) -> Option<usize> {
+    find_bytes(&buf[start..], &value.to_le_bytes()).map(|pos| pos + start)
+}
+
+fn read_u32(buf: &[u8], offset: usize) -> Option<u32> {
+    buf.get(offset..offset + 4)
+        .map(|bytes| u32::from_le_bytes(bytes.try_into().unwrap()))
+}
+
+fn read_u64(buf: &[u8], offset: usize) -> Option<u64> {
+    buf.get(offset..offset + 8)
+        .map(|bytes| u64::from_le_bytes(bytes.try_into().unwrap()))
 }
 
 /// Scans `engine.dll` for the static `CGlobalVarsBase` object.
